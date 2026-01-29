@@ -1,274 +1,119 @@
-\# 📊 Subscription Tracker
+# Subscription Tracker
 
+O aplicatie web moderna pentru gestionarea abonamentelor personale, dezvoltata in Java cu Spring Boot.
 
+![Dashboard](screenshots/dashboard.png)
 
-O aplicație web modernă pentru gestionarea abonamentelor personale, dezvoltată în Java cu Spring Boot.
+## Functionalitati
 
+- CRUD complet - Adauga, vizualizeaza, editeaza si sterge abonamente
+- Calcul automat - Costuri lunare si anuale calculate automat
+- Grafic interactiv - Vizualizare cheltuieli pe categorii (Doughnut Chart)
+- Filtrare si sortare - Cauta dupa nume/categorie, sorteaza dupa pret/data
+- Validari - Verificare date server-side cu mesaje in romana
+- Verificare duplicat - Previne adaugarea aceluiasi abonament de doua ori
+- REST API - 14 endpoint-uri pentru integrari externe
+- Design modern - Interfata Dark Mode responsiva
 
-
-!\[Dashboard](screenshots/dashboard.png)
-
-
-
-\## ✨ Funcționalități
-
-
-
-\- ✅ \*\*CRUD complet\*\* - Adaugă, vizualizează, editează și șterge abonamente
-
-\- ✅ \*\*Calcul automat\*\* - Costuri lunare și anuale calculate automat
-
-\- ✅ \*\*Grafic interactiv\*\* - Vizualizare cheltuieli pe categorii (Doughnut Chart)
-
-\- ✅ \*\*Filtrare și sortare\*\* - Caută după nume/categorie, sortează după preț/dată
-
-\- ✅ \*\*Validări\*\* - Verificare date server-side cu mesaje în română
-
-\- ✅ \*\*Verificare duplicat\*\* - Previne adăugarea aceluiași abonament de două ori
-
-\- ✅ \*\*REST API\*\* - 14 endpoint-uri pentru integrări externe
-
-\- ✅ \*\*Design modern\*\* - Interfață Dark Mode responsivă
-
-
-
-\## 🛠️ Tehnologii utilizate
-
-
+## Tehnologii utilizate
 
 | Categorie | Tehnologii |
-
 |-----------|------------|
+| Backend | Java 17, Spring Boot 3.2, Spring MVC, Spring Data JPA |
+| Frontend | Thymeleaf, HTML5, CSS3, JavaScript, Chart.js |
+| Baza de date | H2 Database (embedded) |
+| Build | Maven |
+| IDE | IntelliJ IDEA |
+| Testare API | Postman |
 
-| \*\*Backend\*\* | Java 17, Spring Boot 3.2, Spring MVC, Spring Data JPA |
-
-| \*\*Frontend\*\* | Thymeleaf, HTML5, CSS3, JavaScript, Chart.js |
-
-| \*\*Baza de date\*\* | H2 Database (embedded) |
-
-| \*\*Build\*\* | Maven |
-
-| \*\*IDE\*\* | IntelliJ IDEA |
-
-| \*\*Testare API\*\* | Postman |
-
-
-
-\## 📁 Structura proiectului
-
+## Structura proiectului
 ```
-
-src/main/java/com/awj/proiect/subscription\_tracker/
-
+src/main/java/com/awj/proiect/subscription_tracker/
 ├── controller/
-
-│   ├── SubscriptionController.java    # REST API
-
-│   └── SubscriptionWebController.java # Web interface
-
+│   ├── SubscriptionController.java
+│   └── SubscriptionWebController.java
 ├── model/
-
-│   ├── Subscription.java              # Entitatea principală
-
-│   ├── Category.java                  # Enum categorii
-
-│   └── BillingCycle.java              # Enum frecvențe
-
+│   ├── Subscription.java
+│   ├── Category.java
+│   └── BillingCycle.java
 ├── repository/
-
-│   └── SubscriptionRepository.java    # Acces baza de date
-
+│   └── SubscriptionRepository.java
 ├── service/
-
-│   └── SubscriptionService.java       # Logica de business
-
+│   └── SubscriptionService.java
 └── SubscriptionTrackerApplication.java
-
 ```
 
+## Cum rulezi aplicatia
 
+### Cerinte:
+- Java 17+
+- Maven
 
-\## 🚀 Cum rulezi aplicația
+### Pasi:
 
-
-
-\### Cerințe:
-
-\- Java 17+
-
-\- Maven
-
-
-
-\### Pași:
-
-
-
-1\. \*\*Clonează repository-ul:\*\*
-
+1. Cloneaza repository-ul:
 ```bash
-
 git clone https://github.com/nedelcubianca/Subscription-Tracker.git
-
 cd Subscription-Tracker
-
 ```
 
-
-
-2\. \*\*Rulează aplicația:\*\*
-
+2. Ruleaza aplicatia:
 ```bash
-
 mvn spring-boot:run
-
 ```
 
-
-
-3\. \*\*Deschide în browser:\*\*
-
+3. Deschide in browser:
 ```
-
 http://localhost:8081
-
 ```
 
+## Screenshots
 
+### Dashboard
+Pagina principala cu lista abonamentelor si statistici.
 
-4\. \*\*H2 Console (opțional):\*\*
+![Dashboard](screenshots/dashboard.png)
 
-```
+### Formular adaugare/editare
+Formular cu validari pentru gestionarea abonamentelor.
 
-http://localhost:8081/h2-console
+![Formular](screenshots/form.png)
 
-JDBC URL: jdbc:h2:file:~/subscriptionDB
+### Validari
+Mesaje de eroare in limba romana pentru date invalide.
 
-User: sa
+![Validari](screenshots/validation.png)
 
-Password: password
+## REST API Endpoints
 
-```
-
-
-
-\## 📸 Screenshots
-
-
-
-\### Dashboard
-
-Pagina principală cu lista abonamentelor și statistici.
-
-
-
-!\[Dashboard](screenshots/dashboard.png)
-
-
-
-\### Formular adăugare/editare
-
-Formular cu validări pentru gestionarea abonamentelor.
-
-
-
-!\[Formular](screenshots/form.png)
-
-
-
-\### Validări
-
-Mesaje de eroare în limba română pentru date invalide.
-
-
-
-!\[Validări](screenshots/validation.png)
-
-
-
-\### Grafic categorii
-
-Distribuția cheltuielilor pe categorii.
-
-
-
-\## 🔌 REST API
-
-
-
-\### Endpoint-uri disponibile:
-
-
-
-| Metodă | Endpoint | Descriere |
-
+| Metoda | Endpoint | Descriere |
 |--------|----------|-----------|
+| GET | /api/subscriptions | Lista toate abonamentele |
+| GET | /api/subscriptions/{id} | Obtine un abonament |
+| POST | /api/subscriptions | Creeaza abonament nou |
+| PUT | /api/subscriptions/{id} | Actualizeaza abonament |
+| DELETE | /api/subscriptions/{id} | Sterge abonament |
+| GET | /api/subscriptions/stats/total-monthly | Cost lunar total |
+| GET | /api/subscriptions/stats/total-yearly | Cost anual total |
+| GET | /api/subscriptions/stats/by-category | Costuri pe categorii |
+| GET | /api/subscriptions/stats/most-expensive | Cel mai scump |
+| GET | /api/subscriptions/stats/cheapest | Cel mai ieftin |
 
-| GET | `/api/subscriptions` | Lista toate abonamentele |
+## Categorii disponibile
 
-| GET | `/api/subscriptions/{id}` | Obține un abonament |
+- ENTERTAINMENT - Netflix, Spotify, HBO
+- UTILITIES - Internet, Telefonie
+- EDUCATION - Cursuri online, Duolingo
+- HEALTH - Sala, Abonamente medicale
+- SOFTWARE - Microsoft 365, Adobe
+- TRANSPORT - Metrou, STB
+- OTHER - Altele
 
-| POST | `/api/subscriptions` | Creează abonament nou |
+## Autor
 
-| PUT | `/api/subscriptions/{id}` | Actualizează abonament |
+Nedelcu Bianca-Nicoleta
 
-| DELETE | `/api/subscriptions/{id}` | Șterge abonament |
+Universitatea POLITEHNICA din Bucuresti
+Facultatea de Automatica si Calculatoare
 
-| GET | `/api/subscriptions/stats/total-monthly` | Cost lunar total |
-
-| GET | `/api/subscriptions/stats/total-yearly` | Cost anual total |
-
-| GET | `/api/subscriptions/stats/by-category` | Costuri pe categorii |
-
-| GET | `/api/subscriptions/stats/most-expensive` | Cel mai scump |
-
-| GET | `/api/subscriptions/stats/cheapest` | Cel mai ieftin |
-
-| GET | `/api/subscriptions/upcoming` | Scadențe în 7 zile |
-
-| GET | `/api/subscriptions/category/{cat}` | Filtrare categorie |
-
-
-
-\## 📂 Categorii disponibile
-
-
-
-\- 🎬 \*\*ENTERTAINMENT\*\* - Netflix, Spotify, HBO
-
-\- 🏠 \*\*UTILITIES\*\* - Internet, Telefonie, Electricitate
-
-\- 📚 \*\*EDUCATION\*\* - Cursuri online, Duolingo
-
-\- 💪 \*\*HEALTH\*\* - Sală, Abonamente medicale
-
-\- 💻 \*\*SOFTWARE\*\* - Microsoft 365, Adobe, JetBrains
-
-\- 🚇 \*\*TRANSPORT\*\* - Metrou, STB, Bolt
-
-\- 📦 \*\*OTHER\*\* - Altele
-
-
-
-\## 👩‍💻 Autor
-
-
-
-\*\*Nedelcu Bianca-Nicoleta\*\*
-
-
-
-\- 🎓 Universitatea POLITEHNICA din București
-
-\- 📚 Facultatea de Automatică și Calculatoare
-
-\- 👥 Grupa 332AA
-
-
-
----
-
-
-
-\*Proiect realizat pentru disciplina "Aplicații Web cu suport Java" - 2025\*
-
+Proiect realizat pentru disciplina Aplicatii Web cu suport Java - 2025
