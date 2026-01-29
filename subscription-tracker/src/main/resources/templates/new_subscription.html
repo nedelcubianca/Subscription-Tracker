@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Adaugă/Editează Abonament</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-sec: #f5f5dc;
+            --accent: #6c5ce7;
+            --accent-hover: #5b4bc4;
+            --danger: #ff4757;
+            --success: #2ed573;
+            --input-bg: #2d2d2d;
+            --input-border: #404040;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--accent) 0%, #8b7cf7 100%);
+            border-radius: 16px 16px 0 0 !important;
+            padding: 25px 30px;
+            border: none;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-label {
+            color: var(--text-sec);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg);
+            border-color: var(--accent);
+            color: var(--text-main);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: #666;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-select option {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            padding: 10px;
+        }
+
+        .input-group .form-control {
+            border-radius: 10px 0 0 10px;
+        }
+
+        .input-group .form-select {
+            border-radius: 0 10px 10px 0;
+            max-width: 100px;
+        }
+
+        .error-message {
+            color: var(--danger) !important;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #26c466 100%);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #26c466 0%, #1fab57 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(46, 213, 115, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--input-border);
+        }
+
+        .btn-secondary:hover {
+            background-color: #3a3a3a;
+            color: var(--text-main);
+            transform: translateY(-2px);
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            z-index: 10;
+        }
+
+        .input-icon-wrapper .form-control {
+            padding-left: 45px;
+        }
+
+        .form-section {
+            background-color: rgba(108, 92, 231, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(108, 92, 231, 0.1);
+        }
+
+        .form-section-title {
+            color: var(--accent);
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        .back-link {
+            color: var(--text-sec);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        .alert-errors {
+            background-color: rgba(255, 71, 87, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .alert-errors ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .alert-errors li {
+            color: var(--danger);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a th:href="@{/}" class="back-link">
+        <i class="bi bi-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="card">
+        <div class="card-header text-white">
+            <h3>
+                <i class="bi bi-plus-circle" th:if="${subscription.id == null}"></i>
+                <i class="bi bi-pencil-square" th:if="${subscription.id != null}"></i>
+                <span th:text="${subscription.id == null} ? 'Adaugă abonament nou' : 'Editează abonament'">Detalii abonament</span>
+            </h3>
+        </div>
+
+        <div class="card-body">
+
+            <form action="#" th:action="@{/saveSubscription}" th:object="${subscription}" method="POST">
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="bi bi-info-circle"></i> Informații de bază
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="serviceName">Nume Serviciu *</label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-tag"></i>
+                            <input type="text"
+                                   id="serviceName"
+                                   th:field="*{serviceName}"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('serviceName')} ? 'is-invalid' : ''"
+                                   placeholder="ex: Netflix, Spotify, Adobe...">
+                        </div>
+                        <span class="error-message" th:if="${#fields.hasErrors('serviceName')}" th:errors="*{serviceName}"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="category">Categorie *</label>
+                        <select id="category"
+                                th:field="*{category}"
+                                class="form-select"
+                                th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''">
+                            <option value="" disabled selected>Selectează categoria...</option>
+                            <option value="ENTERTAINMENT">Entertainment</option>
+                            <option value="UTILITIES">Utilities</option>
+                            <option value="EDUCATION">Education</option>
+                            <option value="HEALTH">Health</option>
+                            <option value="SOFTWARE">Software</option>
+                            <option value="TRANSPORT">Transport</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                        <span class="error-message" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">
+                        <i class="bi bi-credit-card"></i> Detalii plată
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label" for="price">Preț *</label>
+                            <div class="input-group">
+                                <input type="number"
+                                       id="price"
+                                       step="0.01"
+                                       th:field="*{price}"
+                                       class="form-control"
+                                       th:classappend="${#fields.hasErrors('price')} ? 'is-invalid' : ''"
+                                       placeholder="0.00">
+                                <input type="hidden" th:field="*{currency}">
+                                <div class="input-group-text" style="background: var(--input-bg); color: var(--text-main); border: 1px solid var(--input-border); border-radius: 0 10px 10px 0;">RON</div>
+                            </div>
+                            <span class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label" for="billingCycle">Frecvență *</label>
+                            <select id="billingCycle"
+                                    th:field="*{billingCycle}"
+                                    class="form-select"
+                                    th:classappend="${#fields.hasErrors('billingCycle')} ? 'is-invalid' : ''">
+                                <option value="WEEKLY">Săptămânal</option>
+                                <option value="MONTHLY">Lunar</option>
+                                <option value="YEARLY">Anual</option>
+                            </select>
+                            <span class="error-message" th:if="${#fields.hasErrors('billingCycle')}" th:errors="*{billingCycle}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label" for="startDate">Data Începerii *</label>
+                        <div class="input-icon-wrapper">
+                            <i class="bi bi-calendar3"></i>
+                            <input type="date"
+                                   id="startDate"
+                                   th:field="*{startDate}"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid' : ''">
+                        </div>
+                        <span class="error-message" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 mt-4">
+                    <a th:href="@{/}" class="btn btn-secondary">
+                        <i class="bi bi-x-lg"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

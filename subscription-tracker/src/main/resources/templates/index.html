@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-sec: #f5f5dc;
+            --accent: #6c5ce7;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --input-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: none;
+        }
+
+        .filters-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            background: var(--input-bg);
+            border: 1px solid #333;
+            color: white;
+            border-radius: 10px;
+            padding: 10px 15px;
+            width: 100%;
+        }
+
+        .search-bar:focus { outline: 1px solid var(--accent); }
+
+        .btn-filter {
+            background: var(--input-bg);
+            border: 1px solid #333;
+            color: var(--text-main);
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .btn-filter:hover { background: #333; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: var(--text-sec); padding: 15px 10px; border-bottom: 1px solid #333; }
+        td { padding: 15px 10px; border-bottom: 1px solid #2a2a2a; vertical-align: middle; color: var(--text-main); }
+        .service-name { font-weight: bold; font-size: 1.1em;  color: #edafe6;  }
+        .tag { background: rgba(108, 92, 231, 0.2); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 0.85em; }
+        .due-text { color: var(--text-sec); font-size: 0.9em; }
+        .due-soon { color: var(--warning); font-weight: bold; }
+        .btn-primary { background-color: var(--accent); border:none; border-radius: 20px; padding: 10px 25px; color: white; text-decoration: none; font-weight: bold; }
+        .btn-primary:hover { background-color: #5b4bc4; color: white; }
+        .btn-icon { padding: 0; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; border: none; margin-left: 5px; text-decoration: none;}
+        .btn-edit { background: #333; color: white; }
+        .btn-delete { background: rgba(255, 71, 87, 0.2); color: var(--danger); }
+        .total-display { text-align: center; margin-bottom: 30px; }
+        .total-amount { font-size: 3em; font-weight: bold; color: #2ed573; }
+        .nav-tabs { border-bottom: 1px solid #333; margin-bottom: 20px; }
+        .nav-link { color: var(--text-sec); border: none; font-weight: 600; background: transparent; }
+        .nav-link.active { color: var(--accent); border-bottom: 2px solid var(--accent); background: transparent; }
+        .nav-link:hover { color: var(--text-main); }
+        .search-wrapper { position: relative; flex: 1;}
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .search-wrapper .search-bar {
+            padding-left: 40px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1 style="margin:0;">Finance Tracker</h1>
+        <span style="color: var(--text-sec);">Bine ai venit, Bianca</span>
+    </div>
+    <a th:href="@{/showNewSubscriptionForm}" class="btn-primary">+ Abonament Nou</a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="left-col">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activeTab == 'upcoming' ? 'active' : ''}"
+                   th:href="@{/(tab='upcoming')}">Upcoming</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:classappend="${activeTab == 'all' ? 'active' : ''}"
+                   th:href="@{/(tab='all')}">View All</a>
+            </li>
+        </ul>
+
+        <form action="/" method="get" class="filters-container">
+            <input type="hidden" name="tab" th:value="${activeTab}">
+
+            <div class="search-wrapper">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" name="keyword" class="search-bar"
+                       placeholder="Caută abonament..." th:value="${keyword}">
+            </div>
+
+            <select name="sort" class="btn-filter" onchange="this.form.submit()">
+                <option value="" disabled selected>Sortare</option>
+                <option value="date" th:selected="${sort == 'date'}">Scadență</option>
+                <option value="cost_desc" th:selected="${sort == 'cost_desc'}">Descrescător</option>
+                <option value="cost_asc" th:selected="${sort == 'cost_asc'}">Crescător</option>
+                <option value="name" th:selected="${sort == 'name'}">Nume (A-Z)</option>
+            </select>
+
+            <button type="submit" style="display: none;"></button>
+        </form>
+
+        <div class="card">
+            <h3 style="margin-top:0; margin-bottom: 20px; color: #6d44f2; font-family: Paris; font-size: 28px">Abonamente Active</h3>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Serviciu</th>
+                    <th>Cost</th>
+                    <th>Scadență</th>
+                    <th>Categorie</th>
+                    <th style="text-align: right;">Acțiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="sub : ${listSubscriptions}">
+                    <td>
+                        <div class="service-name" th:text="${sub.serviceName}">Netflix</div>
+                        <small style="color: var(--text-sec);" th:text="${sub.billingCycle}">MONTHLY</small>
+                    </td>
+                    <td th:text="${sub.price} + ' ' + ${sub.currency}">50 RON</td>
+
+                    <td>
+                                <span th:class="${sub.relativeDueDate.contains('days') || sub.relativeDueDate == 'Tomorrow' ? 'due-soon' : 'due-text'}"
+                                      th:text="${sub.relativeDueDate}">in 17 days</span>
+                    </td>
+
+                    <td><span class="tag" th:text="${sub.category}">Ent.</span></td>
+                    <td style="text-align: right;">
+                        <a th:href="@{/showFormForUpdate/{id}(id=${sub.id})}" class="btn-icon btn-edit" title="Edit">✎</a>
+                        <a th:href="@{/deleteSubscription/{id}(id=${sub.id})}"
+                           class="btn-icon btn-delete"
+                           onclick="return confirm('Sigur vrei să ștergi acest abonament?');" title="Delete">✕</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(listSubscriptions)}">
+                    <td colspan="5" class="text-center py-5" style="color: var(--text-sec);">
+                        Niciun abonament găsit.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="right-col">
+        <div class="card" style="height: 100%;">
+            <h3 style="margin-top:0; text-align: center; color: #ffffff">Buget Lunar</h3>
+
+            <div class="total-display">
+                <div class="total-amount" th:text="${totalMonthlyCost}">0</div>
+                <div style="color: var(--text-sec);">RON / lună</div>
+                <div style="color: #888; font-size: 0.85em; margin-top: 8px;">
+                    ≈ <span th:text="${totalYearlyCost}">0</span> RON / an
+                </div>
+            </div>
+
+            <canvas id="expensesChart"></canvas>
+
+            <div class="mt-4 pt-3 border-top border-secondary">
+                <div class="d-flex justify-content-between mb-2">
+                    <small style="color: white;">📈 Maxim:</small>
+                    <small style="color: white;" class="fw-bold" th:if="${mostExpensive != null}" th:text="${mostExpensive.serviceName + ' (' + mostExpensive.price + ' ' + mostExpensive.currency + ')'}">-</small>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <small style="color: white;">📉 Minim:</small>
+                    <small style="color: white;" class="fw-bold" th:if="${cheapest != null}" th:text="${cheapest.serviceName + ' (' + cheapest.price + ' ' + cheapest.currency + ')'}">-</small>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    var chartData = [[${chartData}]];
+    if(chartData) {
+        var labels = Object.keys(chartData);
+        var data = Object.values(chartData);
+
+        var ctx = document.getElementById('expensesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#6c5ce7', '#00cec9', '#ff7675', '#a29bfe', '#ffeaa7', '#55efc4', '#fd79a8'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom', labels: { color: '#ffffff' } } }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
